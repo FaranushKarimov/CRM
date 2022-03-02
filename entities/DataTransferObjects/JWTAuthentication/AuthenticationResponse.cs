@@ -11,5 +11,7 @@ namespace entities.DataTransferObjects.JWTAuthentication
     {
         public int StatusCode { get; set; }
         public string Message { get; set; }
+        public int Exriration { get; set; }
+        public string Token { get; set; }
     }
 }

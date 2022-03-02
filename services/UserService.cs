@@ -1,4 +1,5 @@
 ﻿using contracts.Services;
+using entities.DataTransferObjects;
 using entities.DataTransferObjects.JWTAuthentication;
 using Newtonsoft.Json;
 using RestSharp;
@@ -33,10 +34,15 @@ namespace services
 
                 RestResponse response = await client.ExecuteAsync(request);
 
+                Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(response.Content);
+
                 return new AuthenticationResponse()
                     {
-                        Message = JsonConvert.SerializeObject(System.Text.RegularExpressions.Regex.Unescape(response.Content)),
-                        StatusCode = (int)response.StatusCode
+                        //Message = JsonConvert.SerializeObject(System.Text.RegularExpressions.Regex.Unescape(response.Content)),
+                        Message = "Success",    
+                        Token = myDeserializedClass.access_token,
+                        StatusCode = (int)response.StatusCode,
+                        Exriration = myDeserializedClass.expires_in
                     };
             }
             catch(Exception e)
