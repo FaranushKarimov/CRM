@@ -10,5 +10,6 @@ namespace contracts.Services
     public interface IUserService
     {
         Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request);
+        Task<string> GetUserByCode(string code);
     }
 }

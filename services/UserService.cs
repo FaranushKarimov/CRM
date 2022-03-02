@@ -54,5 +54,14 @@ namespace services
                 };
             }
         }
+
+        public async Task<string> GetUserByCode(string code)
+        {
+            await Task.Run(() => {
+                string preffix = code.Contains("s:") ? "service" : "product";
+                return $"https://crm.alif.tj/{preffix}/{code}";
+            });
+            return null;
+        }
     }
 }
