@@ -24,7 +24,7 @@ namespace services
 
                 string Resource = "https://apifront.alif.tj/api/auth/login";
                 var client = new RestClient(Resource);
-                var request = new RestRequest(Resource, Method.Post);
+                var request = new RestRequest(Resource, Method.POST);
 
 
                 request.AddHeader("Content-Type", "application/json");
@@ -34,7 +34,7 @@ namespace services
                     password = request_in.Password
                 });
 
-                RestResponse response = await client.ExecuteAsync(request);
+                RestResponse response = (RestResponse)await client.ExecuteAsync(request);
 
                 Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(response.Content);
 
@@ -68,26 +68,48 @@ namespace services
 
         public async Task Put(UpdateCompilanceStatus updateCompilanceStatus)
         {
-            updateCompilanceStatus.Response.Items.ComplianceStatusId = 1;
-            var request = new RestRequest("http://192.168.15.170:7070/storage/documents/compliance/crm", Method.Put);
+            //updateCompilanceStatus.Response.Items.ComplianceStatusId = 1;
+            var request = new RestRequest("http://192.168.15.170:7070/storage/documents/compliance/crm", Method.PUT);
             var client = new RestClient("http://192.168.15.170:7070/storage/documents/compliance/crm");
 
             request.AddHeader("Authorization", API_KEY);
             request.AddJsonBody(updateCompilanceStatus);
-            var result = client.ExecutePutAsync(request);
+            var result = client.ExecuteGetAsync(request);
         }
 
         public async Task Update(int id, int compilanceStatusId, string objectType)
         {
             string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/{id}";
             var client = new RestClient(resource);
-            var request = new RestRequest(resource, Method.Get);
+            var request = new RestRequest(resource, Method.GET);
             request.AddHeader("Authorization", API_KEY);
             var result = await client.ExecuteAsync<UpdateCompilanceStatus>(request);
             var updateCompilanceStatus = result.Data;
 
             // PUT
-            await Put(updateCompilanceStatus);
+            await UpdateComplience(id, compilanceStatusId, objectType);
         }
+        private async Task UpdateComplience(int id, int compilanceStatusId, string objectType)
+        {
+
+            var client = new RestClient("http://192.168.15.170:7070/storage/documents/compliance/crm");
+            client.Timeout = -1;
+            var request = new RestRequest(Method.PUT);
+            request.AddHeader("Authorization", API_KEY);
+            request.AddHeader("Content-Type", "application/json");
+            var body = @"{
+                    " + "\n" +
+                                @$"    ""id"":{id},
+                    " + "\n" +
+                                @$"    ""object_type"": ""{objectType}"",
+                    " + "\n" +
+                                @$"    ""compliance_status_id"":{compilanceStatusId}
+                    " + "\n" +
+                       @"}";
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            Console.WriteLine(response.Content);
+        }
+        
     }
 }
