@@ -77,7 +77,7 @@ namespace services
             var result = client.ExecuteGetAsync(request);
         }
 
-        public async Task Update(int id, int compilanceStatusId, string objectType)
+        public async Task Update(int id, int compilanceStatusId, string objectType, string note)
         {
             string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/{id}";
             var client = new RestClient(resource);
@@ -87,29 +87,49 @@ namespace services
             var updateCompilanceStatus = result.Data;
 
             // PUT
-            await UpdateComplience(id, compilanceStatusId, objectType);
+            await UpdateStatusComplience(id, compilanceStatusId, objectType, note);
         }
-        private async Task UpdateComplience(int id, int compilanceStatusId, string objectType)
-        {
 
-            var client = new RestClient("http://192.168.15.170:7070/storage/documents/compliance/crm");
+        
+
+        //private async Task UpdateComplience(int id, int compilanceStatusId, string objectType)
+        //{
+
+        //    var client = new RestClient("http://192.168.15.170:7070/storage/documents/compliance/crm");
+        //    client.Timeout = -1;
+        //    var request = new RestRequest(Method.PUT);
+        //    request.AddHeader("Authorization", API_KEY);
+        //    request.AddHeader("Content-Type", "application/json");
+        //    var body = @"{
+        //            " + "\n" +
+        //                        @$"    ""id"":{id},
+        //            " + "\n" +
+        //                        @$"    ""object_type"": ""{objectType}"",
+        //            " + "\n" +
+        //                        @$"    ""compliance_status_id"":{compilanceStatusId}
+        //            " + "\n" +
+        //               @"}";
+        //    request.AddParameter("application/json", body, ParameterType.RequestBody);
+        //    IRestResponse response = await client.ExecuteAsync(request);
+        //}
+
+        private async Task UpdateStatusComplience(int id, int compilanceStatusId, string objectType, string note)
+        {
+            var client = new RestClient($"http://192.168.15.170:7070/storage/documents/compliance/crm/{objectType}/{id}");
             client.Timeout = -1;
             var request = new RestRequest(Method.PUT);
             request.AddHeader("Authorization", API_KEY);
             request.AddHeader("Content-Type", "application/json");
             var body = @"{
-                    " + "\n" +
-                                @$"    ""id"":{id},
-                    " + "\n" +
-                                @$"    ""object_type"": ""{objectType}"",
-                    " + "\n" +
-                                @$"    ""compliance_status_id"":{compilanceStatusId}
-                    " + "\n" +
-                       @"}";
+            " + "\n" +
+            @$"    ""compliance_status_id"":{compilanceStatusId},
+            " + "\n" +
+            @$"    ""note"":""{note}""
+            " + "\n" +
+            @"}";
             request.AddParameter("application/json", body, ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
+            IRestResponse response = await client.ExecuteAsync(request);
             Console.WriteLine(response.Content);
         }
-        
     }
 }
