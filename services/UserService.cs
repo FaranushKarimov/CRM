@@ -107,7 +107,7 @@ namespace services
                     " + "\n" +
                        @"}";
             request.AddParameter("application/json", body, ParameterType.RequestBody);
-            IRestResponse response = client.Execute(request);
+            IRestResponse response = await client.ExecuteAsync(request);
             Console.WriteLine(response.Content);
         }
         
