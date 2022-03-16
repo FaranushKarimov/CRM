@@ -29,5 +29,12 @@ namespace CRM.Controllers
             await _userService.UpdateStatusComplience(route, compilanceStatusId, note);
             return Ok();
         }
+
+        [HttpGet("/api/getUserByCode")]
+        public IActionResult GetUserByCode(string route)
+        {
+           
+            return Ok(_userService.GetUserByCode(route));
+        }
     }
 }

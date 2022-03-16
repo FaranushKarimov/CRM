@@ -56,6 +56,21 @@ namespace services
                 };
             }
         }
+
+        public GetUserComplianceStatus GetUserByCode(string route)
+        {
+            string[] linkList = route.Split("/");
+            string objectType = linkList[3];
+            int id = int.Parse(linkList[4]);
+            string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/{id}";
+            var client = new RestClient(resource);
+            var request = new RestRequest(resource, Method.GET);
+            request.AddHeader("Authorization", API_KEY);
+            request.AddHeader("Content-Type", "application/json");
+            var queryResult = client.Execute(request).Content;
+            return JsonConvert.DeserializeObject<GetUserComplianceStatus>(queryResult);
+        }
+
         public async Task UpdateStatusComplience(string route, int CompilanceStatusId, string note)
         {
             string ObjectType = default;

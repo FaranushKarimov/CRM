@@ -1,4 +1,5 @@
-﻿using entities.DataTransferObjects.JWTAuthentication;
+﻿using entities.DataTransferObjects;
+using entities.DataTransferObjects.JWTAuthentication;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace contracts.Services
         //Task<string> GetUserByCode(/*string code*/string route, int compilanceStatusId, string note);
         Task UpdateStatusComplience(string route, int CompilanceStatusId, string note);
         //Task Update(int id, int compilanceStatusId, string objectType, string note);
-
+        GetUserComplianceStatus GetUserByCode(string route);
 
 
     }
