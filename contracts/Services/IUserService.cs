@@ -12,6 +12,7 @@ namespace contracts.Services
         Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request);
         Task<string> GetUserByCode(string code);
         Task Update(int id, int compilanceStatusId, string objectType, string note);
+        Task UpdateStatusComplience(int id, int compilanceStatusId, string objectType, string note);
        
     }
 }

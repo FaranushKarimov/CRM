@@ -66,17 +66,7 @@ namespace services
             return null;
         }
 
-        public async Task Put(UpdateCompilanceStatus updateCompilanceStatus)
-        {
-            //updateCompilanceStatus.Response.Items.ComplianceStatusId = 1;
-            var request = new RestRequest("http://192.168.15.170:7070/storage/documents/compliance/crm", Method.PUT);
-            var client = new RestClient("http://192.168.15.170:7070/storage/documents/compliance/crm");
-
-            request.AddHeader("Authorization", API_KEY);
-            request.AddJsonBody(updateCompilanceStatus);
-            var result = client.ExecuteGetAsync(request);
-        }
-
+        
         public async Task Update(int id, int compilanceStatusId, string objectType, string note)
         {
             string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/{id}";
@@ -92,28 +82,7 @@ namespace services
 
         
 
-        //private async Task UpdateComplience(int id, int compilanceStatusId, string objectType)
-        //{
-
-        //    var client = new RestClient("http://192.168.15.170:7070/storage/documents/compliance/crm");
-        //    client.Timeout = -1;
-        //    var request = new RestRequest(Method.PUT);
-        //    request.AddHeader("Authorization", API_KEY);
-        //    request.AddHeader("Content-Type", "application/json");
-        //    var body = @"{
-        //            " + "\n" +
-        //                        @$"    ""id"":{id},
-        //            " + "\n" +
-        //                        @$"    ""object_type"": ""{objectType}"",
-        //            " + "\n" +
-        //                        @$"    ""compliance_status_id"":{compilanceStatusId}
-        //            " + "\n" +
-        //               @"}";
-        //    request.AddParameter("application/json", body, ParameterType.RequestBody);
-        //    IRestResponse response = await client.ExecuteAsync(request);
-        //}
-
-        private async Task UpdateStatusComplience(int id, int compilanceStatusId, string objectType, string note)
+        public async Task UpdateStatusComplience(int id, int compilanceStatusId, string objectType, string note)
         {
             var client = new RestClient($"http://192.168.15.170:7070/storage/documents/compliance/crm/{objectType}/{id}");
             client.Timeout = -1;
