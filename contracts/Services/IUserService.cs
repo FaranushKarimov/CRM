@@ -10,8 +10,11 @@ namespace contracts.Services
     public interface IUserService
     {
         Task<AuthenticationResponse> AuthenticateAsync(AuthenticationRequest request);
-        Task<string> GetUserByCode(string code);
-        Task Update(int id, int compilanceStatusId, string objectType, string note);
-       
+        //Task<string> GetUserByCode(/*string code*/string route, int compilanceStatusId, string note);
+        Task UpdateStatusComplience(string route, int CompilanceStatusId, string note);
+        //Task Update(int id, int compilanceStatusId, string objectType, string note);
+
+
+
     }
 }

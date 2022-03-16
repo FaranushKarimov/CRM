@@ -24,9 +24,9 @@ namespace CRM.Controllers
         }
 
         [HttpGet("/api/updateStatus")]
-        public async Task<IActionResult> UpdateStatus(int id, int compilanceStatusId, string objectType, string note)
+        public async Task<IActionResult> UpdateStatus(string route, int compilanceStatusId, string note)
         {
-            await _userService.Update(id, compilanceStatusId, objectType, note);
+            await _userService.UpdateStatusComplience(route, compilanceStatusId, note);
             return Ok();
         }
     }
