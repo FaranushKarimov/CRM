@@ -23,17 +23,16 @@ namespace CRM.Controllers
             return Ok( await _userService.AuthenticateAsync(request));
         }
 
-        [HttpGet("/api/updateStatus")]
-        public async Task<IActionResult> UpdateStatus(string route, int compilanceStatusId, string note)
+        [HttpPut("/api/updateStatus")]
+        public async Task<IActionResult> UpdateStatus(int id, int compilanceStatusId, string ObjectType,string note)
         {
-            await _userService.UpdateStatusComplience(route, compilanceStatusId, note);
+            await _userService.PutRequestComplience(id, compilanceStatusId, ObjectType, note);
             return Ok();
         }
 
         [HttpGet("/api/getUserByCode")]
         public IActionResult GetUserByCode(string route)
         {
-           
             return Ok(_userService.GetUserByCode(route));
         }
     }

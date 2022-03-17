@@ -60,7 +60,6 @@ namespace services
         public GetUserComplianceStatus GetUserByCode(string route)
         {
             string[] linkList = route.Split("/");
-            string objectType = linkList[3];
             int id = int.Parse(linkList[4]);
             string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/{id}";
             var client = new RestClient(resource);
@@ -71,33 +70,33 @@ namespace services
             return JsonConvert.DeserializeObject<GetUserComplianceStatus>(queryResult);
         }
 
-        public async Task UpdateStatusComplience(string route, int CompilanceStatusId, string note)
-        {
-            string ObjectType = default;
-            int Id = default;
-            route = route.Replace("https://crm3.alif.tj/", "");
+        //public async Task UpdateStatusComplience(string route, int CompilanceStatusId, string note)
+        //{
+        //    string ObjectType = default;
+        //    int Id = default;
+        //    route = route.Replace("https://crm3.alif.tj/", "");
 
-            if (route.ToLower().Contains("product"))
-            {
-                ObjectType = "product";
-                var address = Regex.Match(route, @"\d+").Value;
+        //    if (route.ToLower().Contains("product"))
+        //    {
+        //        ObjectType = "product";
+        //        var address = Regex.Match(route, @"\d+").Value;
 
-                Int32.TryParse(address, out Id);
-            }
-            else
-            {
-                if (route.ToLower().Contains("services"))
-                {
-                    ObjectType = "service";
-                    var address = Regex.Match(route, @"\d+").Value;
+        //        Int32.TryParse(address, out Id);
+        //    }
+        //    else
+        //    {
+        //        if (route.ToLower().Contains("services"))
+        //        {
+        //            ObjectType = "service";
+        //            var address = Regex.Match(route, @"\d+").Value;
 
-                    Int32.TryParse(address, out Id);
-                }
-            }
+        //            Int32.TryParse(address, out Id);
+        //        }
+        //    }
 
-            await PutRequestComplience(Id, CompilanceStatusId, ObjectType, note);
-        }
-        private async Task PutRequestComplience(int id, int compilanceStatusId, string objectType, string note)
+        //    await PutRequestComplience(Id, CompilanceStatusId, ObjectType, note);
+        //}
+        public async Task PutRequestComplience(int id, int compilanceStatusId, string objectType, string note)
         {
             var client = new RestClient($"http://192.168.15.170:7070/storage/documents/compliance/crm/{objectType}/{id}");
             client.Timeout = -1;
@@ -113,7 +112,6 @@ namespace services
             @"}";
             request.AddParameter("application/json", body, ParameterType.RequestBody);
             IRestResponse response = await client.ExecuteAsync(request);
-            Console.WriteLine(response.Content);
         }
     }
 }
