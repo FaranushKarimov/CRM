@@ -35,5 +35,11 @@ namespace CRM.Controllers
         {
             return Ok(_userService.GetUserByCode(route));
         }
+
+        [HttpGet("/api/getAllUsers")]
+        public IActionResult GetAllUsers()
+        {
+            return Ok(_userService.GetAllUsers());
+        }
     }
 }
