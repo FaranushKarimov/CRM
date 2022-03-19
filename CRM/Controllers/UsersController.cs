@@ -20,7 +20,7 @@ namespace CRM.Controllers
         [HttpPost("/api/login")]
         public async Task<IActionResult> Authentication(AuthenticationRequest request)
         {
-            return Ok( await _userService.AuthenticateAsync(request));
+            return Ok(await _userService.AuthenticateAsync(request));
         }
 
         [HttpGet("/api/updateStatus")]
