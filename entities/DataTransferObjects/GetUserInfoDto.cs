@@ -8,9 +8,10 @@ namespace entities.DataTransferObjects
 {
     public class GetUserInfoDto
     {
+        public int Id { get; set; }
         public string FullName { get; set; }
         public string City { get; set; }
-        public string Town { get; set; }
+        public string StatusName { get; set; }
         public string ObjectType { get; set; }
     }
 }

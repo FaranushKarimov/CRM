@@ -2,6 +2,7 @@
 using entities.DataTransferObjects.JWTAuthentication;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,8 +17,11 @@ namespace contracts.Services
         //Task Update(int id, int compilanceStatusId, string objectType, string note);
         GetUserComplianceStatus GetUserByCode(string route);
         GetAllUserComplianceStatus GetAllUsers();
+        Task<MemoryStream> GetAllUsersAsExcel();
         Task PutRequestComplience(int id, int compilanceStatusId, string objectType, string note);
         GetAllUserComplianceStatus GetUserComplianceByName(string fullName);
+        Task<MemoryStream> UsersToMemoryStream(IEnumerable<GetUserInfoDto> users);
+        IEnumerable<GetUserInfoDto> GetCheckedUser(GetAllUserComplianceStatus statuses);
 
     }
 }

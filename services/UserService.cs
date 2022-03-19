@@ -3,8 +3,10 @@ using entities.DataTransferObjects;
 using entities.DataTransferObjects.JWTAuthentication;
 using Newtonsoft.Json;
 using RestSharp;
+using SpreadCheetah;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -68,6 +70,33 @@ namespace services
             return JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(queryResult);
         }
 
+        public async Task<MemoryStream> GetAllUsersAsExcel()
+        {
+            string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/";
+            var client = new RestClient(resource);
+            var request = new RestRequest(resource, Method.GET);
+            request.AddHeader("Authorization", API_KEY);
+            request.AddHeader("Content-Type", "application/json");
+            var queryResult = client.Execute(request).Content;
+            var usersFromCrm = JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(queryResult);
+            var checkedUser = GetCheckedUser(usersFromCrm);
+            return await UsersToMemoryStream(checkedUser);
+        }
+
+        public IEnumerable<GetUserInfoDto> GetCheckedUser(GetAllUserComplianceStatus statuses)
+        {
+            var result = new List<GetUserInfoDto>();
+            result = statuses.Response.Items.Select(x => new GetUserInfoDto
+            {
+                Id = x.ID,
+                City = x.Town,
+                FullName = x.UserFullName,
+                StatusName = x.ComplianceStatus.Name,
+                ObjectType = x.ObjectType
+            }).ToList();
+            return result;
+        }
+
         public GetUserComplianceStatus GetUserByCode(string route)
         {
             string[] linkList = route.Split("/");
@@ -128,6 +157,36 @@ namespace services
             @"}";
             request.AddParameter("application/json", body, ParameterType.RequestBody);
             IRestResponse response = await client.ExecuteAsync(request);
+        }
+
+        public async Task<MemoryStream> UsersToMemoryStream(IEnumerable<GetUserInfoDto> users)
+        {
+            var columns = new String[] { "Идентификационный номер", "ФИО", "Город", "Статус", "Объект" };
+            await using var stream = new MemoryStream();
+            using var spreadsheet = await Spreadsheet.CreateNewAsync(stream);
+            await spreadsheet.StartWorksheetAsync("Транзакции");
+
+            var row = new List<Cell>();
+            foreach (var columnName in columns)
+            {
+                row.Add(new Cell(columnName));
+            }
+
+            await spreadsheet.AddRowAsync(row);
+
+            row.Clear();
+            foreach (var info in users)
+            {
+                row.Add(new Cell(info.Id));
+                row.Add(new Cell(info.FullName));
+                row.Add(new Cell(info.City));
+                row.Add(new Cell(info.StatusName));
+                row.Add(new Cell(info.ObjectType));
+                await spreadsheet.AddRowAsync(row);
+                row.Clear();
+            }
+            await spreadsheet.FinishAsync();
+            return stream;
         }
     }
 }

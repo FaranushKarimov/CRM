@@ -41,5 +41,12 @@ namespace CRM.Controllers
         {
             return Ok(_userService.GetAllUsers());
         }
+
+        [HttpGet("/api/getAllUsersExcel")]
+        public async Task<IActionResult> GetAllUsersExcel()
+        {
+            var users = await _userService.GetAllUsersAsExcel();
+            return File(users.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Пользователи.xlsx");
+        }
     }
 }
