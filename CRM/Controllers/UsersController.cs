@@ -41,5 +41,10 @@ namespace CRM.Controllers
         {
             return Ok(_userService.GetAllUsers());
         }
+        [HttpGet("/api/getAllUsersArchive")]
+        public IActionResult GetAllUsersArchive()
+        {
+            return Ok(_userService.GetUserListArchive());
+        }
     }
 }

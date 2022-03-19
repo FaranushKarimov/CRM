@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -128,6 +129,26 @@ namespace services
             @"}";
             request.AddParameter("application/json", body, ParameterType.RequestBody);
             IRestResponse response = await client.ExecuteAsync(request);
+        }
+        public async Task GetUserListArchive()
+        {
+            var url = "http://192.168.15.170:7070/storage/documents/compliance/crm?page=1&limit=25&compliance_status_id=6";
+
+            var httpRequest = (HttpWebRequest)WebRequest.Create(url);
+
+            httpRequest.Headers["Authorization"] =   $"Bearer {API_KEY}";
+
+
+            var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+            }
+
+            Console.WriteLine(httpResponse.StatusCode);
+
+
+
         }
     }
 }
