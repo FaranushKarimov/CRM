@@ -18,5 +18,6 @@ namespace contracts.Services
         GetAllUserComplianceStatus GetAllUsers();
         Task PutRequestComplience(int id, int compilanceStatusId, string objectType, string note);
         GetAllUserComplianceStatus GetUserComplianceByName(string fullName);
+
     }
 }

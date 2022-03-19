@@ -14,7 +14,7 @@ namespace repositories
         private IUserRepository _userRepository;
         public RepositoryManager(DataContext context)
         {
-            context = _context;
+            _context = context;
         }
 
         public IUserRepository UserRepository => _userRepository ??= new EfUserRepository(_context);
