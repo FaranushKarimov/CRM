@@ -82,7 +82,7 @@ namespace entities.DataTransferObjects
             public Items Items { get; set; }
         }
 
-        public class UpdateCompilanceStatus
+        public class GetUserComplianceStatus
         {
             [JsonProperty("meta")]
             public Meta Meta { get; set; }
