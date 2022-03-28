@@ -42,9 +42,9 @@ namespace CRM.Controllers
             return Ok(_userService.GetAllUsers());
         }
         [HttpGet("GetAllUsersArchive")]
-        public IActionResult GetAllUsersArchive()
+        public IActionResult GetAllUsersArchive(int Page, int limit)
         {
-            return Ok(_userService.GetUserListArchive());
+            return Ok(_userService.GetUserListArchive(Page, limit));
         }
     }
 }

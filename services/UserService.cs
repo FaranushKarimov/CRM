@@ -130,15 +130,15 @@ namespace services
             request.AddParameter("application/json", body, ParameterType.RequestBody);
             IRestResponse response = await client.ExecuteAsync(request);
         }
-        public async Task<GetAllUserComplianceStatus> GetUserListArchive()
+        public GetAllUserComplianceStatus GetUserListArchive(int Page, int limit)
         {
-            string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/?page=1&limit=25&compliance_status_id=6";
+            string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/?page={Page}&limit={limit}&compliance_status_id=6";
             var client = new RestClient(resource);
-            var request = new RestRequest(resource, Method.GET);
-            request.AddHeader("Authorization", API_KEY);
-            request.AddHeader("Content-Type", "application/json");
-            var queryResult = client.Execute(request).Content;
-            return JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(queryResult);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Authorization", "Bearer eyJqdGkiOiJqdGkiLCJleHAiOiIxOTQxMjM5MDIyIiwiaXNzIjoiaXNzIiwic3ViIjoiMDAzMzAyMjExIiwidXNlcm5hbWUiOiJDUk0iLCJpYXQiOjE2NDEyMzkwMjJ9");
+            var response = client.Execute(request).Content;
+            return JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(response);
         }
     }
 }
