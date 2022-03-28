@@ -82,11 +82,6 @@ namespace services
             return JsonConvert.DeserializeObject<GetUserComplianceStatus>(queryResult);
         }
 
-        public GetAllUserComplianceStatus GetUserComplianceByName(string fullName)
-        {
-            throw new NotImplementedException();
-        }
-
         //public async Task UpdateStatusComplience(string route, int CompilanceStatusId, string note)
         //{
         //    string ObjectType = default;
