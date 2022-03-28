@@ -76,7 +76,7 @@ namespace services
             var client = new RestClient(resource);
             var request = new RestRequest(resource, Method.GET);
             request.AddHeader("Authorization", API_KEY);
-            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Content-Type", "application/json"); 
             var queryResult = client.Execute(request).Content;
             var usersFromCrm = JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(queryResult);
             var checkedUser = GetCheckedUser(usersFromCrm);
@@ -110,10 +110,12 @@ namespace services
             return JsonConvert.DeserializeObject<GetUserComplianceStatus>(queryResult);
         }
 
-        public GetAllUserComplianceStatus GetUserComplianceByName(string fullName)
-        {
-            throw new NotImplementedException();
-        }
+
+        //public GetAllUserComplianceStatus GetUserComplianceByName(string fullName)
+        //{
+        //    var allAdd = GetAllUsers();
+        //    var result =  allAdd.Response.Items.SelectMany(x => x.UserFullName).ToList();
+        //}
 
         //public async Task UpdateStatusComplience(string route, int CompilanceStatusId, string note)
         //{
