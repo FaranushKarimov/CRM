@@ -70,6 +70,8 @@ namespace services
             return JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(queryResult);
         }
 
+
+
         public async Task<MemoryStream> GetAllUsersAsExcel()
         {
             string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/";
@@ -159,6 +161,43 @@ namespace services
             @"}";
             request.AddParameter("application/json", body, ParameterType.RequestBody);
             IRestResponse response = await client.ExecuteAsync(request);
+        }
+
+        public async Task<GetAllUserComplianceStatus> Search(string search, string searchType, int? complianceStatusId, List<string> dates)
+        {
+            var client = new RestClient("http://192.168.15.170:7070/");
+
+            StringBuilder url = new StringBuilder("storage/documents/compliance/crm");
+            string prefix = "/?";
+            bool hasParam = false;
+            if (search != null && searchType != null)
+            {
+                url.Append($"/?search={search}&type_search={searchType}");
+                hasParam = true;
+            }
+            if(complianceStatusId != null)
+            {
+                url.Append($"{(hasParam ? "&" : prefix)}compliance_status_id={complianceStatusId}");
+                hasParam = true;
+            }
+
+            if(dates != null)
+            {
+                foreach(var date in dates)
+                {
+                    url.Append($"{(hasParam ? "&" : prefix)}date={date}");
+                    hasParam = true;
+                }
+            }
+
+            var request = new RestRequest(url.ToString(), Method.GET);
+            //var request = new RestRequest($"storage/documents/compliance/crm/?search={search}&type_search={searchType}", Method.GET);
+            //var request = new RestRequest(Method.GET);
+            request.AddHeader("Authorization", "Bearer eyJqdGkiOiJqdGkiLCJleHAiOiIxOTQxMjM5MDIyIiwiaXNzIjoiaXNzIiwic3ViIjoiMDAzMzAyMjExIiwidXNlcm5hbWUiOiJDUk0iLCJpYXQiOjE2NDEyMzkwMjJ9");
+            //IRestResponse response = client.Execute(request);
+            //Console.WriteLine(response.Content);
+            var queryResult = (await client.ExecuteAsync(request)).Content;
+            return JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(queryResult);
         }
 
         public async Task<MemoryStream> UsersToMemoryStream(IEnumerable<GetUserInfoDto> users)

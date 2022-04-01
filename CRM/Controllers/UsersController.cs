@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,6 +48,11 @@ namespace CRM.Controllers
         {
             var users = await _userService.GetAllUsersAsExcel();
             return File(users.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Пользователи.xlsx");
+        }
+        [HttpPost("/api/Search")]
+        public async Task<IActionResult> Search(string search, string searchType, [Range(2,3)]int? complianceStatus, [FromQuery]List<string> dates)
+        {
+            return Ok(await _userService.Search(search, searchType, complianceStatus,dates));
         }
     }
 }

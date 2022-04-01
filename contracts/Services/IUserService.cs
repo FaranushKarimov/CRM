@@ -18,6 +18,7 @@ namespace contracts.Services
         Task PutRequestComplience(int id, int compilanceStatusId, string objectType, string note);
         Task<MemoryStream> UsersToMemoryStream(IEnumerable<GetUserInfoDto> users);
         IEnumerable<GetUserInfoDto> GetCheckedUser(GetAllUserComplianceStatus statuses);
+        Task<GetAllUserComplianceStatus> Search(string search, string searchType, int? complianceStatus, List<string> dates);
 
     }
 }
