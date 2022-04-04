@@ -180,7 +180,6 @@ namespace services
                 url.Append($"{(hasParam ? "&" : prefix)}compliance_status_id={complianceStatusId}");
                 hasParam = true;
             }
-
             if(dates != null)
             {
                 foreach(var date in dates)
@@ -189,13 +188,8 @@ namespace services
                     hasParam = true;
                 }
             }
-
             var request = new RestRequest(url.ToString(), Method.GET);
-            //var request = new RestRequest($"storage/documents/compliance/crm/?search={search}&type_search={searchType}", Method.GET);
-            //var request = new RestRequest(Method.GET);
             request.AddHeader("Authorization", "Bearer eyJqdGkiOiJqdGkiLCJleHAiOiIxOTQxMjM5MDIyIiwiaXNzIjoiaXNzIiwic3ViIjoiMDAzMzAyMjExIiwidXNlcm5hbWUiOiJDUk0iLCJpYXQiOjE2NDEyMzkwMjJ9");
-            //IRestResponse response = client.Execute(request);
-            //Console.WriteLine(response.Content);
             var queryResult = (await client.ExecuteAsync(request)).Content;
             return JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(queryResult);
         }
