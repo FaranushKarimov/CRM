@@ -1,4 +1,5 @@
 ﻿using contracts.Services;
+using entities.DataTransferObjects.ArchiveDTO;
 using entities.DataTransferObjects.JWTAuthentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +35,11 @@ namespace CRM.Controllers
         public IActionResult GetUserByCode(string route)
         {
             return Ok(_userService.GetUserByCode(route));
+        }
+        [HttpPost("/api/GetAllUsersArchive")]
+        public IActionResult GetAllUsersArchive([FromBody] GetAllWithFilterDTO dto)
+        {
+            return Ok(_userService.GetUserListArchive(dto));
         }
     }
 }

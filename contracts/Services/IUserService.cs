@@ -1,4 +1,5 @@
 ﻿using entities.DataTransferObjects;
+using entities.DataTransferObjects.ArchiveDTO;
 using entities.DataTransferObjects.JWTAuthentication;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace contracts.Services
         //Task Update(int id, int compilanceStatusId, string objectType, string note);
         GetUserComplianceStatus GetUserByCode(string route);
         Task PutRequestComplience(int id, int compilanceStatusId, string objectType, string note);
+        GetAllUserComplianceStatus GetUserListArchive(GetAllWithFilterDTO dto);
 
 
     }
