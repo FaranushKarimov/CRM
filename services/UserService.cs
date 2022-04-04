@@ -3,6 +3,7 @@ using entities.DataTransferObjects;
 using entities.DataTransferObjects.JWTAuthentication;
 using Newtonsoft.Json;
 using RestSharp;
+using SpreadCheetah;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -69,6 +70,33 @@ namespace services
             return JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(queryResult);
         }
 
+        public async Task<MemoryStream> GetAllUsersAsExcel()
+        {
+            string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/";
+            var client = new RestClient(resource);
+            var request = new RestRequest(resource, Method.GET);
+            request.AddHeader("Authorization", API_KEY);
+            request.AddHeader("Content-Type", "application/json"); 
+            var queryResult = client.Execute(request).Content;
+            var usersFromCrm = JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(queryResult);
+            var checkedUser = GetCheckedUser(usersFromCrm);
+            return await UsersToMemoryStream(checkedUser);
+        }
+
+        public IEnumerable<GetUserInfoDto> GetCheckedUser(GetAllUserComplianceStatus statuses)
+        {
+            var result = new List<GetUserInfoDto>();
+            result = statuses.Response.Items.Select(x => new GetUserInfoDto
+            {
+                Id = x.ID,
+                City = x.Town,
+                FullName = x.UserFullName,
+                StatusName = x.ComplianceStatus.Name,
+                ObjectType = x.ObjectType
+            }).ToList();
+            return result;
+        }
+
         public GetUserComplianceStatus GetUserByCode(string route)
         {
             string[] linkList = route.Split("/");
@@ -80,6 +108,11 @@ namespace services
             request.AddHeader("Content-Type", "application/json");
             var queryResult = client.Execute(request).Content;
             return JsonConvert.DeserializeObject<GetUserComplianceStatus>(queryResult);
+        }
+
+        public GetAllUserComplianceStatus GetUserComplianceByName(string fullName)
+        {
+            throw new NotImplementedException();
         }
 
         //public async Task UpdateStatusComplience(string route, int CompilanceStatusId, string note)
@@ -124,16 +157,6 @@ namespace services
             @"}";
             request.AddParameter("application/json", body, ParameterType.RequestBody);
             IRestResponse response = await client.ExecuteAsync(request);
-        }
-        public GetAllUserComplianceStatus GetUserListArchive(int Page, int limit)
-        {
-            string resource = $"http://192.168.15.170:7070/storage/documents/compliance/crm/?page={Page}&limit={limit}&compliance_status_id=6";
-            var client = new RestClient(resource);
-            client.Timeout = -1;
-            var request = new RestRequest(Method.GET);
-            request.AddHeader("Authorization", "Bearer eyJqdGkiOiJqdGkiLCJleHAiOiIxOTQxMjM5MDIyIiwiaXNzIjoiaXNzIiwic3ViIjoiMDAzMzAyMjExIiwidXNlcm5hbWUiOiJDUk0iLCJpYXQiOjE2NDEyMzkwMjJ9");
-            var response = client.Execute(request).Content;
-            return JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(response);
         }
     }
 }
