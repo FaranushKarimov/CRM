@@ -165,8 +165,7 @@ namespace services
 
         public async Task<GetAllUserComplianceStatus> Search(string search, string searchType, int? complianceStatusId, List<string> dates)
         {
-            var client = new RestClient("http://192.168.15.170:7070/");
-
+            var client = new RestClient("http://192.168.15.170:7070/");  
             StringBuilder url = new StringBuilder("storage/documents/compliance/crm");
             string prefix = "/?";
             bool hasParam = false;
