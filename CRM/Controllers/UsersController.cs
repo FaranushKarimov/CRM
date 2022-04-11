@@ -1,4 +1,5 @@
 ﻿using contracts.Services;
+using entities.DataTransferObjects.ArchiveDTO;
 using entities.DataTransferObjects.JWTAuthentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -53,6 +54,12 @@ namespace CRM.Controllers
         public async Task<IActionResult> Search(string search, string searchType, [Range(2,3)]int? complianceStatus, [FromQuery]List<string> dates)
         {
             return Ok(await _userService.Search(search, searchType, complianceStatus,dates));
+        }
+
+        [HttpPost("/api/GetAllUsersArchive")]
+        public IActionResult GetAllUsersArchive([FromBody] GetAllWithFilterDTO dto)
+        {
+            return Ok(_userService.GetUserListArchive(dto));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using entities.DataTransferObjects;
+using entities.DataTransferObjects.ArchiveDTO;
 using entities.DataTransferObjects.JWTAuthentication;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace contracts.Services
         Task<MemoryStream> UsersToMemoryStream(IEnumerable<GetUserInfoDto> users);
         IEnumerable<GetUserInfoDto> GetCheckedUser(GetAllUserComplianceStatus statuses);
         Task<GetAllUserComplianceStatus> Search(string search, string searchType, int? complianceStatus, List<string> dates);
+        GetAllUserComplianceStatus GetUserListArchive(GetAllWithFilterDTO dto);
 
     }
 }

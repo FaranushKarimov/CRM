@@ -1,5 +1,6 @@
 ﻿using contracts.Services;
 using entities.DataTransferObjects;
+using entities.DataTransferObjects.ArchiveDTO;
 using entities.DataTransferObjects.JWTAuthentication;
 using Newtonsoft.Json;
 using RestSharp;
@@ -110,6 +111,55 @@ namespace services
             request.AddHeader("Content-Type", "application/json");
             var queryResult = client.Execute(request).Content;
             return JsonConvert.DeserializeObject<GetUserComplianceStatus>(queryResult);
+        }
+
+        public GetAllUserComplianceStatus GetUserListArchive(GetAllWithFilterDTO dto)
+        {
+            string ServerUrl = $"http://192.168.15.170:7070/storage/documents/compliance/crm/?";
+            ServerUrl = CreateLink(dto.Search, ServerUrl);
+            ServerUrl = GetDate(ServerUrl, dto.Date);
+            ServerUrl = ServerUrl + "&compliance_status_id=6";
+            string Content = SendGetQuery(ServerUrl);
+            return JsonConvert.DeserializeObject<GetAllUserComplianceStatus>(Content);
+        }
+
+        private string GetDate(string ServerUrl, List<DateTimeOffset> DateList)
+        {
+            if (DateList == null)
+                return ServerUrl;
+            foreach (var date in DateList)
+            {
+                ServerUrl = ServerUrl + "&" + $"date={date.Date.ToString("yyyy.MM.dd")}";
+            }
+            return ServerUrl;
+        }
+
+        private string CreateLink(string searchString, string ServerUrl)
+        {
+            int SearchInt;
+            if (searchString != null)
+            {
+                var search = Regex.Match(searchString, @"\d+").Value;
+                Int32.TryParse(search, out SearchInt);
+                string type_search;
+                if (SearchInt.GetType().FullName.Contains("Int") && SearchInt != 0)
+                {
+                    type_search = "object_id";
+                }
+                else
+                    type_search = "username";
+                ServerUrl = ServerUrl + "&" + $"type_search={type_search}" + $"&search={searchString}";
+            }
+            return ServerUrl;
+        }
+        private string SendGetQuery(string ServerUrl)
+        {
+            var client = new RestClient(ServerUrl);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Authorization", API_KEY);
+            var response = client.Execute(request).Content;
+            return response;
         }
 
 
